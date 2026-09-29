@@ -15,7 +15,7 @@
   </script>
 
   <script>
-    /* تسريع الانتقال: بعد اكتشاف الملف لا ننتظر 6 ثوانٍ قبل اللغز التالي */
+    /* نحافظ على الانتقال السريع الموجود في اللعبة */
     (() => {
       const nativeSetTimeout = window.setTimeout;
       window.setTimeout = function (fn, ms, ...args) {
@@ -29,52 +29,104 @@
   <script type="module" src="./main.js"></script>
 
   <script>
-    /* إصلاح الكتابة بشكل مباشر: نخلي خانة الإجابة هي العنصر المسيطر على لوحة المفاتيح */
-    const answerWatcher = new MutationObserver(() => {
+    /*
+      إصلاح خانة الإجابة فقط — لا نغيّر منطق اللعبة ولا الانتقال بين الألغاز.
+      الخانة تظل قابلة للكتابة والمسح دائمًا.
+    */
+    const normalizeAnswer = value => String(value || '')
+      .replace(/[\u064B-\u065F\u0640]/g, '')
+      .replace(/[أإآ]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي')
+      .replace(/[^\u0621-\u064Aa-z0-9 ]/gi, '')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const answerAliases = {
+      'الخوف': 'الخوف من التحدث',
+      'خوف': 'الخوف من التحدث',
+      'لغة الجسد': 'لغة الجسد',
+      'لغة الجسم': 'لغة الجسد',
+      'الخريطة الذهنية': 'الخريطة الذهنية',
+      'خريطة ذهنية': 'الخريطة الذهنية',
+      'الارتجال': 'الارتجال',
+      'ارتجال': 'الارتجال',
+      'الوعي بالذات': 'الوعي بالذات',
+      'وعي بالذات': 'الوعي بالذات',
+      'نبرات الصوت': 'نبرات الصوت',
+      'نبرة الصوت': 'نبرات الصوت',
+      'فن الوقفات': 'فن الوقفات',
+      'الوقفات': 'فن الوقفات'
+    };
+
+    const prepareAnswerInput = () => {
       const input = document.querySelector('#in');
       const puzzle = document.querySelector('#pz');
-      if (!input || !puzzle || input.dataset.ready === '1') return;
+      if (!input || !puzzle || !puzzle.classList.contains('on')) return;
 
-      input.dataset.ready = '1';
       input.disabled = false;
       input.readOnly = false;
       input.tabIndex = 0;
       input.style.pointerEvents = 'auto';
+      input.style.userSelect = 'text';
+      input.style.webkitUserSelect = 'text';
+      input.style.cursor = 'text';
       input.style.position = 'relative';
       input.style.zIndex = '30';
 
-      ['pointerdown','mousedown','mouseup','click','touchstart','touchend'].forEach(type => {
-        input.addEventListener(type, e => e.stopPropagation());
-      });
+      if (document.activeElement !== input) {
+        requestAnimationFrame(() => {
+          try { input.focus({preventScroll:true}); } catch(e) { input.focus(); }
+        });
+      }
+    };
 
-      requestAnimationFrame(() => {
-        input.focus({preventScroll:true});
-      });
-    });
-
+    const answerWatcher = new MutationObserver(prepareAnswerInput);
     answerWatcher.observe(document.body, {childList:true, subtree:true});
+    document.addEventListener('focusin', e => {
+      if (e.target && e.target.id === 'in') prepareAnswerInput();
+    }, true);
 
-    /* احتياطي للوحة المفاتيح: حتى لو فقدت الخانة التركيز، الكتابة تذهب إليها */
+    /* لا نسمح لعناصر المسرح بالتقاط الضغطات الخاصة بخانة الإجابة */
+    document.addEventListener('pointerdown', e => {
+      if (e.target && e.target.id === 'in') e.stopPropagation();
+    }, true);
+    document.addEventListener('mousedown', e => {
+      if (e.target && e.target.id === 'in') e.stopPropagation();
+    }, true);
+
+    /*
+      تصحيح الإجابات المختصرة قبل أن يصل الضغط إلى زر «تحقق».
+      مثال: كتابة «الخوف» تصبح «الخوف من التحدث»، وهي الإجابة المقصودة للغز.
+    */
+    document.addEventListener('click', e => {
+      const button = e.target && e.target.closest ? e.target.closest('#ok') : null;
+      if (!button) return;
+
+      const input = document.querySelector('#in');
+      if (!input) return;
+
+      const normalized = normalizeAnswer(input.value);
+      const key = Object.keys(answerAliases).find(k => normalizeAnswer(k) === normalized);
+      if (key) input.value = answerAliases[key];
+    }, true);
+
+    /* احتياطي للكتابة والمسح إذا فقدت الخانة التركيز */
     document.addEventListener('keydown', e => {
       const input = document.querySelector('#in');
       const puzzle = document.querySelector('#pz');
       if (!input || !puzzle || !puzzle.classList.contains('on')) return;
 
-      if (e.key === 'Backspace') {
+      if (e.key === 'Backspace' || e.key === 'Delete') {
         if (document.activeElement !== input) {
-          input.value = input.value.slice(0, -1);
+          if (e.key === 'Backspace') input.value = input.value.slice(0, -1);
+          else input.value = '';
           e.preventDefault();
         }
         return;
       }
 
-      if (e.key === 'Delete') {
-        if (document.activeElement !== input) {
-          input.value = '';
-          e.preventDefault();
-        }
-        return;
-      }
+      if (e.key === 'Enter') return;
 
       if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
         if (document.activeElement !== input) {
