@@ -117,15 +117,59 @@ const pz=i=>{
       input.value='';
     }
   },50);
-};const inp=$('#in');
-$('#hb').onclick=()=>$('#ht').textContent=p.h;
-inp.onpointerdown=e=>e.stopPropagation();
-inp.onclick=e=>{e.stopPropagation();inp.focus()};
-inp.oninput=()=>{inp.value=inp.value};
-const chk=()=>{if(p.a.map(nz).includes(nz(inp.value))){e.className='';win(i)}else{e.classList.add('no');setTimeout(()=>e.classList.remove('no'),450)}};
-$('#ok').onclick=e=>{e.stopPropagation();chk()};
-inp.onkeydown=k=>{k.stopPropagation();if(k.key=='Enter'){k.preventDefault();chk()}};
-setTimeout(()=>{inp.focus();inp.click()},300)};
+  const inp=e.querySelector('#in');
+  const ok=e.querySelector('#ok');
+  const hb=e.querySelector('#hb');
+  const ht=e.querySelector('#ht');
+
+  const chk=()=>{
+    const answer=nz(inp.value);
+
+    if(p.a.map(nz).includes(answer)){
+      e.className='';
+      win(i);
+    }else{
+      e.classList.add('no');
+      setTimeout(()=>e.classList.remove('no'),450);
+    }
+  };
+
+  hb.onclick=ev=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    ht.textContent=p.h;
+  };
+
+  inp.addEventListener('pointerdown',ev=>ev.stopPropagation());
+  inp.addEventListener('click',ev=>{
+    ev.stopPropagation();
+    inp.focus();
+  });
+
+  inp.addEventListener('input',ev=>{
+    ev.stopPropagation();
+  });
+
+  inp.addEventListener('keydown',ev=>{
+    ev.stopPropagation();
+
+    if(ev.key==='Enter'){
+      ev.preventDefault();
+      chk();
+    }
+  });
+
+  ok.onclick=ev=>{
+    ev.preventDefault();
+    ev.stopPropagation();
+    chk();
+  };
+
+  setTimeout(()=>{
+    inp.focus();
+    inp.select();
+  },100);
+};
 const win=i=>{cls('solved');if(i==3){const s=cur().querySelector('.spk');s.classList.remove('c');s.classList.add('o')}if(i==4)cur().tidy();if(i==6)cur().querySelector('.spk').classList.add('o');
 if(!files.includes(i))files.push(i);save();hud();
 later(()=>{$('#stp').innerHTML=`<div>تم اكتشاف الملف 0${i+1}</div><small>أُضيف إلى ملف القضية: ${P[i].name}</small>`;$('#stp').className='on'},2600);
