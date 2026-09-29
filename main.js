@@ -81,7 +81,7 @@ const t=x=>{const e=$('#t1');e.style.animation='none';e.offsetWidth;e.style.anim
 const cap=t=>{const e=$('#cap');e.textContent=t;e.classList.add('on');later(()=>e.classList.remove('on'),5500)};
 const hud=()=>{$('#fb').textContent=`FILES ${files.length}/7`;$('#dr').innerHTML=files.length?files.map(i=>`<div>0${i+1} — ${P[i].name}</div>`).join(''):'<div>—</div>'};
 const show=(k,first)=>{gen++;sd={};$('#pz').className='';$('#cm').innerHTML='';const s=$('#sc'),put=()=>{s.innerHTML=S[k]();s.style.opacity=1;I[k]&&I[k]()};first?put():(s.style.opacity=0,setTimeout(put,800))};
-const pz=i=>{const p=P[i],e=$('#pz');e.className='on p'+i;e.innerHTML=`<p>${p.r}</p><h3>${p.q}</h3><div><input id="in" placeholder="اكتب إجابتك" autocomplete="off"><button id="ok">تحقّق</button></div><em id="ht"></em><a id="hb">تلميح</a>`;
+const pz=i=>{const p=P[i],e=$('#pz');e.className='on p'+i;e.innerHTML=`<p>${p.r}</p><h3>${p.q}</h3><div><input id="in" type="text" placeholder="اكتب إجابتك" autocomplete="off" spellcheck="false"><button id="ok">تحقّق</button></div><em id="ht"></em><a id="hb">تلميح</a>`;
 $('#hb').onclick=()=>$('#ht').textContent=p.h;
 const chk=()=>{if(p.a.map(nz).includes(nz($('#in').value))){e.className='';win(i)}else{e.classList.add('no');setTimeout(()=>e.classList.remove('no'),450)}};
 $('#ok').onclick=chk;$('#in').onkeydown=k=>k.key=='Enter'&&chk();setTimeout(()=>$('#in').focus(),300)};
@@ -114,35 +114,3 @@ $('#st').addEventListener('click',e=>{const a=e.target.closest('[data-a]');a&&ac
 $('#fb').onclick=()=>$('#dr').classList.toggle('on');
 hud();show('C',1);
 $('#begin').onclick=()=>{$('#ov').innerHTML='';$('#hud').className='';files.length>=7?show(8):files.length?show(files.length+1):show(0)};
-document.addEventListener('keydown', function(e) {
-  const input = document.getElementById('in');
-  const pz = document.getElementById('pz');
-
-  if (!input || !pz || !pz.classList.contains('on')) return;
-
-  if (document.activeElement !== input) {
-    input.focus();
-  }
-
-  if (
-    e.key.length === 1 &&
-    !e.ctrlKey &&
-    !e.altKey &&
-    !e.metaKey
-  ) {
-    const start = input.selectionStart ?? input.value.length;
-    const end = input.selectionEnd ?? input.value.length;
-
-    input.value =
-      input.value.slice(0, start) +
-      e.key +
-      input.value.slice(end);
-
-    input.setSelectionRange(
-      start + e.key.length,
-      start + e.key.length
-    );
-
-    e.preventDefault();
-  }
-});
