@@ -13,7 +13,8 @@
   <script type="module" src="./main.js"></script>
 
   <script>
-    /* إصلاح إدخال الإجابات وإعادة التركيز على خانة الإجابة بعد الخطأ */
+    /* إصلاح خانة الإجابة: قبول "الخوف" قبل فحص main.js،
+       وإعادة المؤشر للخانة بعد الضغط على تحقق حتى يمكن تعديل الإجابة فورًا. */
     document.addEventListener('click', function (event) {
       const button = event.target.closest('#ok');
       const input = document.querySelector('#in');
@@ -23,14 +24,13 @@
       const text = puzzle.textContent || '';
       const answer = (input.value || '').trim();
 
-      /* في لغز الخوف: "الخوف" إجابة صحيحة */
+      /* هذا المستمع يعمل في مرحلة الالتقاط، لذلك تصل الإجابة المصححة إلى main.js قبل فحصها. */
       if (text.includes('كل متحدث عظيم قابلني') && /^(ال)?خوف$/.test(answer)) {
         input.value = 'الخوف من التحدث أمام الجمهور';
       }
 
-      /* بعد الضغط على تحقق، لو كانت الإجابة خاطئة نعيد المؤشر للخانة
-         حتى تستطيع حذف الإجابة وتعديلها مباشرة دون الضغط مرة أخرى. */
-      setTimeout(() => {
+      /* بعد التحقق، أبقِ خانة الإجابة قابلة للكتابة والتعديل مباشرة. */
+      setTimeout(function () {
         const currentInput = document.querySelector('#in');
         const currentPuzzle = document.querySelector('#pz');
         if (currentInput && currentPuzzle && currentPuzzle.classList.contains('on')) {
@@ -38,8 +38,8 @@
           const n = currentInput.value.length;
           try { currentInput.setSelectionRange(n, n); } catch (e) {}
         }
-      }, 20);
-    });
+      }, 30);
+    }, true);
   </script>
 </body>
 </html>
