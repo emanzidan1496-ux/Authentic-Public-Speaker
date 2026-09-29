@@ -11,5 +11,23 @@
   <div id="app"></div>
 
   <script type="module" src="./main.js"></script>
+
+  <script>
+    /* إصلاح إجابة لغز الخوف بدون تغيير بقية اللعبة */
+    document.addEventListener('click', function (event) {
+      const button = event.target.closest('#ok');
+      const input = document.querySelector('#in');
+      const puzzle = document.querySelector('#pz');
+      if (!button || !input || !puzzle) return;
+
+      const text = puzzle.textContent || '';
+      const answer = (input.value || '').trim();
+
+      /* إذا كان اللغز الحالي هو لغز الخوف، فـ "الخوف" إجابة صحيحة */
+      if (text.includes('كل متحدث عظيم قابلني') && /^(ال)?خوف$/.test(answer)) {
+        input.value = 'الخوف من التحدث أمام الجمهور';
+      }
+    }, true);
+  </script>
 </body>
 </html>
