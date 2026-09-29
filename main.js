@@ -173,7 +173,7 @@ const pz=i=>{
 const win=i=>{cls('solved');if(i==3){const s=cur().querySelector('.spk');s.classList.remove('c');s.classList.add('o')}if(i==4)cur().tidy();if(i==6)cur().querySelector('.spk').classList.add('o');
 if(!files.includes(i))files.push(i);save();hud();
 later(()=>{$('#stp').innerHTML=`<div>تم اكتشاف الملف 0${i+1}</div><small>أُضيف إلى ملف القضية: ${P[i].name}</small>`;$('#stp').className='on'},2600);
-later(()=>{$('#stp').className='';show(i==6?8:i+2)},6000)};
+later(()=>{$('#stp').className='';if(i===0){show(2,true);pz(1)}else if(i===1){show(3,true);pz(2)}else if(i===2){show(4,true);pz(3)}else{show(i==6?8:i+2)}},6000)};
 const reveal=()=>{gen++;$('#ov').innerHTML='<div id="bl" style="opacity:0"></div>';$('#hud').className='h';const b=$('#bl');requestAnimationFrame(()=>b.style.opacity=1);
 setTimeout(()=>{$('#sc').innerHTML=S[9]();$('#ov').innerHTML='<div id="bl"></div><div id="fin"><small>أنت الآن...</small><h1>Authentic Speaker</h1><h2>المتحدث الحقيقي</h2><h3>أحمد سالم</h3></div>'},1800);
 const at=(ms,f)=>setTimeout(f,ms),c=x=>cur().classList.add(x),f=$;
