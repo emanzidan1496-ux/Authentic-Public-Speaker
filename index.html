@@ -29,10 +29,7 @@
   <script type="module" src="./main.js"></script>
 
   <script>
-    /*
-      إصلاح خانة الإجابة فقط — لا نغيّر منطق اللعبة ولا الانتقال بين الألغاز.
-      الخانة تظل قابلة للكتابة والمسح دائمًا.
-    */
+    /* إصلاح خانة الإجابة فقط — بدون تغيير منطق اللعبة أو الانتقالات */
     const normalizeAnswer = value => String(value || '')
       .replace(/[\u064B-\u065F\u0640]/g, '')
       .replace(/[أإآ]/g, 'ا')
@@ -59,46 +56,111 @@
       'الوقفات': 'فن الوقفات'
     };
 
-    const prepareAnswerInput = () => {
+    const getAnswerInput = () => {
       const input = document.querySelector('#in');
       const puzzle = document.querySelector('#pz');
-      if (!input || !puzzle || !puzzle.classList.contains('on')) return;
+      return input && puzzle && puzzle.classList.contains('on') ? input : null;
+    };
+
+    const prepareAnswerInput = () => {
+      const input = getAnswerInput();
+      if (!input) return;
 
       input.disabled = false;
       input.readOnly = false;
       input.tabIndex = 0;
+      input.type = 'text';
       input.style.pointerEvents = 'auto';
       input.style.userSelect = 'text';
       input.style.webkitUserSelect = 'text';
       input.style.cursor = 'text';
       input.style.position = 'relative';
       input.style.zIndex = '30';
-
-      if (document.activeElement !== input) {
-        requestAnimationFrame(() => {
-          try { input.focus({preventScroll:true}); } catch(e) { input.focus(); }
-        });
-      }
     };
 
-    const answerWatcher = new MutationObserver(prepareAnswerInput);
+    const focusAnswerInput = () => {
+      const input = getAnswerInput();
+      if (!input) return;
+      prepareAnswerInput();
+      try { input.focus({preventScroll:true}); } catch(e) { input.focus(); }
+      const end = input.value.length;
+      try { input.setSelectionRange(end, end); } catch(e) {}
+    };
+
+    const answerWatcher = new MutationObserver(() => {
+      const input = getAnswerInput();
+      if (!input) return;
+      prepareAnswerInput();
+    });
     answerWatcher.observe(document.body, {childList:true, subtree:true});
+
     document.addEventListener('focusin', e => {
       if (e.target && e.target.id === 'in') prepareAnswerInput();
     }, true);
 
-    /* لا نسمح لعناصر المسرح بالتقاط الضغطات الخاصة بخانة الإجابة */
+    /* الضغط على خانة الإجابة يركز عليها فورًا ولا يمر إلى المسرح */
     document.addEventListener('pointerdown', e => {
-      if (e.target && e.target.id === 'in') e.stopPropagation();
-    }, true);
-    document.addEventListener('mousedown', e => {
-      if (e.target && e.target.id === 'in') e.stopPropagation();
+      const input = e.target && e.target.closest ? e.target.closest('#in') : null;
+      if (!input) return;
+      e.stopPropagation();
+      prepareAnswerInput();
+      try { input.focus({preventScroll:true}); } catch(err) { input.focus(); }
     }, true);
 
-    /*
-      تصحيح الإجابات المختصرة قبل أن يصل الضغط إلى زر «تحقق».
-      مثال: كتابة «الخوف» تصبح «الخوف من التحدث»، وهي الإجابة المقصودة للغز.
-    */
+    document.addEventListener('mousedown', e => {
+      const input = e.target && e.target.closest ? e.target.closest('#in') : null;
+      if (!input) return;
+      e.stopPropagation();
+      prepareAnswerInput();
+      try { input.focus({preventScroll:true}); } catch(err) { input.focus(); }
+    }, true);
+
+    /* لا نسمح للعبة بالتعامل مع أحداث لوحة المفاتيح قبل خانة الإجابة */
+    document.addEventListener('keydown', e => {
+      const input = getAnswerInput();
+      if (!input) return;
+
+      /* لو الخانة هي العنصر النشط، نترك المتصفح يتعامل معها طبيعيًا */
+      if (document.activeElement === input) return;
+
+      if (e.key === 'Enter') return;
+
+      if (e.key === 'Backspace') {
+        input.value = input.value.slice(0, -1);
+        input.dispatchEvent(new Event('input', {bubbles:true}));
+        e.preventDefault();
+        focusAnswerInput();
+        return;
+      }
+
+      if (e.key === 'Delete') {
+        input.value = '';
+        input.dispatchEvent(new Event('input', {bubbles:true}));
+        e.preventDefault();
+        focusAnswerInput();
+        return;
+      }
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        input.value += e.key;
+        input.dispatchEvent(new Event('input', {bubbles:true}));
+        e.preventDefault();
+        focusAnswerInput();
+      }
+    }, true);
+
+    /* دعم الإدخال العربي من لوحة المفاتيح/IME */
+    document.addEventListener('beforeinput', e => {
+      const input = getAnswerInput();
+      if (!input || document.activeElement === input) return;
+      if (typeof e.data !== 'string') return;
+      input.value += e.data;
+      input.dispatchEvent(new Event('input', {bubbles:true}));
+      e.preventDefault();
+      focusAnswerInput();
+    }, true);
+
+    /* تصحيح الإجابات المختصرة قبل التحقق */
     document.addEventListener('click', e => {
       const button = e.target && e.target.closest ? e.target.closest('#ok') : null;
       if (!button) return;
@@ -109,31 +171,6 @@
       const normalized = normalizeAnswer(input.value);
       const key = Object.keys(answerAliases).find(k => normalizeAnswer(k) === normalized);
       if (key) input.value = answerAliases[key];
-    }, true);
-
-    /* احتياطي للكتابة والمسح إذا فقدت الخانة التركيز */
-    document.addEventListener('keydown', e => {
-      const input = document.querySelector('#in');
-      const puzzle = document.querySelector('#pz');
-      if (!input || !puzzle || !puzzle.classList.contains('on')) return;
-
-      if (e.key === 'Backspace' || e.key === 'Delete') {
-        if (document.activeElement !== input) {
-          if (e.key === 'Backspace') input.value = input.value.slice(0, -1);
-          else input.value = '';
-          e.preventDefault();
-        }
-        return;
-      }
-
-      if (e.key === 'Enter') return;
-
-      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
-        if (document.activeElement !== input) {
-          input.value += e.key;
-          e.preventDefault();
-        }
-      }
     }, true);
   </script>
 
