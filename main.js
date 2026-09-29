@@ -1,4 +1,3 @@
-import './style.css';
 const $=s=>document.querySelector(s),KEY='asc-001';
 const nz=s=>s.replace(/[\u064B-\u065F\u0640]/g,'').replace(/[أإآ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/[^\u0621-\u064Aa-z0-9 ]/gi,'').split(/\s+/).filter(Boolean).map(w=>w.replace(/^ال/,'')).join(' ');
 const P=[
