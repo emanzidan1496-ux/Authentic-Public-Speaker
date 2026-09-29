@@ -82,3 +82,14 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
 .hn{opacity:0}.d .hn{opacity:1;animation:cp .22s infinite alternate}@keyframes cp{to{transform:translateY(-14px)}}
 .rp{fill:none;stroke:#D8C3A5;opacity:0}.d .rp{animation:rn 2.4s infinite}@keyframes rn{0%{opacity:.7;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
 .rp{transform-box:fill-box;transform-origin:center}
+#pz{
+  pointer-events:all !important;
+  z-index:20 !important;
+}
+
+#pz input{
+  pointer-events:all !important;
+  user-select:text !important;
+  -webkit-user-select:text !important;
+  cursor:text !important;
+}
