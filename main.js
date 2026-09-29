@@ -114,3 +114,35 @@ $('#st').addEventListener('click',e=>{const a=e.target.closest('[data-a]');a&&ac
 $('#fb').onclick=()=>$('#dr').classList.toggle('on');
 hud();show('C',1);
 $('#begin').onclick=()=>{$('#ov').innerHTML='';$('#hud').className='';files.length>=7?show(8):files.length?show(files.length+1):show(0)};
+document.addEventListener('keydown', function(e) {
+  const input = document.getElementById('in');
+  const pz = document.getElementById('pz');
+
+  if (!input || !pz || !pz.classList.contains('on')) return;
+
+  if (document.activeElement !== input) {
+    input.focus();
+  }
+
+  if (
+    e.key.length === 1 &&
+    !e.ctrlKey &&
+    !e.altKey &&
+    !e.metaKey
+  ) {
+    const start = input.selectionStart ?? input.value.length;
+    const end = input.selectionEnd ?? input.value.length;
+
+    input.value =
+      input.value.slice(0, start) +
+      e.key +
+      input.value.slice(end);
+
+    input.setSelectionRange(
+      start + e.key.length,
+      start + e.key.length
+    );
+
+    e.preventDefault();
+  }
+});
