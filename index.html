@@ -10,42 +10,67 @@
   <div id="app"></div>
 
   <script>
-    /* يبدأ التحقيق من البداية عند كل Refresh. */
+    /* كل إعادة تحميل تبدأ القضية من السؤال الأول */
     try { localStorage.removeItem('asc-001'); } catch (e) {}
   </script>
 
   <script type="module" src="./main.js"></script>
 
   <script>
-    /* إصلاح خانة الإجابة: نستبدل حقل الإدخال بحقل نصي مستقل وقابل للكتابة فعليًا. */
+    /* إصلاح الكتابة بشكل مباشر: نخلي خانة الإجابة هي العنصر المسيطر على لوحة المفاتيح */
     const answerWatcher = new MutationObserver(() => {
-      const old = document.querySelector('#in');
-      if (!old || old.dataset.ready === '1') return;
+      const input = document.querySelector('#in');
+      const puzzle = document.querySelector('#pz');
+      if (!input || !puzzle || input.dataset.ready === '1') return;
 
-      const input = document.createElement('textarea');
-      input.id = 'in';
-      input.rows = 1;
-      input.value = old.value || '';
-      input.placeholder = old.placeholder || 'اكتب إجابتك';
-      input.autocomplete = 'off';
-      input.spellcheck = false;
       input.dataset.ready = '1';
-      input.setAttribute('dir', 'rtl');
-      input.style.cssText = 'flex:1;min-height:48px;resize:none;padding:.5em;font:inherit;font-size:1.2em;background:#fff;color:#2F2E2B;border:1px solid #A66F4E;pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;cursor:text!important;position:relative;z-index:99999;display:block;';
+      input.disabled = false;
+      input.readOnly = false;
+      input.tabIndex = 0;
+      input.style.pointerEvents = 'auto';
+      input.style.position = 'relative';
+      input.style.zIndex = '30';
 
-      old.replaceWith(input);
-
-      ['pointerdown','mousedown','click','touchstart'].forEach(type => {
+      ['pointerdown','mousedown','mouseup','click','touchstart','touchend'].forEach(type => {
         input.addEventListener(type, e => e.stopPropagation());
       });
 
       requestAnimationFrame(() => {
-        input.focus();
-        try { input.setSelectionRange(input.value.length, input.value.length); } catch (e) {}
+        input.focus({preventScroll:true});
       });
     });
 
-    answerWatcher.observe(document.body, { childList: true, subtree: true });
+    answerWatcher.observe(document.body, {childList:true, subtree:true});
+
+    /* احتياطي للوحة المفاتيح: حتى لو فقدت الخانة التركيز، الكتابة تذهب إليها */
+    document.addEventListener('keydown', e => {
+      const input = document.querySelector('#in');
+      const puzzle = document.querySelector('#pz');
+      if (!input || !puzzle || !puzzle.classList.contains('on')) return;
+
+      if (e.key === 'Backspace') {
+        if (document.activeElement !== input) {
+          input.value = input.value.slice(0, -1);
+          e.preventDefault();
+        }
+        return;
+      }
+
+      if (e.key === 'Delete') {
+        if (document.activeElement !== input) {
+          input.value = '';
+          e.preventDefault();
+        }
+        return;
+      }
+
+      if (e.key.length === 1 && !e.ctrlKey && !e.altKey && !e.metaKey) {
+        if (document.activeElement !== input) {
+          input.value += e.key;
+          e.preventDefault();
+        }
+      }
+    }, true);
   </script>
 </body>
 </html>
