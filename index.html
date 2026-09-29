@@ -26,6 +26,32 @@
     })();
   </script>
 
+  <script>
+    /* اختصارات الإجابات فقط — لا نتدخل في الكتابة داخل الخانة */
+    const normalizeAnswer = value => String(value || '')
+      .replace(/[\u064B-\u065F\u0640]/g, '')
+      .replace(/[أإآ]/g, 'ا')
+      .replace(/ة/g, 'ه')
+      .replace(/ى/g, 'ي')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    const answerAliases = {
+      'الخوف': 'الخوف من التحدث أمام الجمهور',
+      'خوف': 'الخوف من التحدث أمام الجمهور'
+    };
+
+    /* يعمل قبل زر التحقق، لكنه لا يلمس أحداث لوحة المفاتيح إطلاقًا */
+    document.addEventListener('click', e => {
+      const button = e.target && e.target.closest ? e.target.closest('#ok') : null;
+      if (!button) return;
+      const input = document.querySelector('#in');
+      if (!input) return;
+      const value = normalizeAnswer(input.value);
+      if (answerAliases[value]) input.value = answerAliases[value];
+    }, true);
+  </script>
+
   <script type="module" src="./main.js"></script>
   <script type="module" src="./flow-patch.js"></script>
 </body>
