@@ -17,11 +17,13 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
 #cap{position:absolute;bottom:4%;left:0;right:0;text-align:center;font-size:1.5em;color:var(--w);text-shadow:0 2px 8px #000;opacity:0;transition:opacity 1.2s;z-index:4;pointer-events:none}#cap.on{opacity:1}
 #cm{position:absolute;bottom:3%;left:0;right:0;display:flex;gap:1.5em;justify-content:center;z-index:4}
 #cm div{background:var(--i);color:var(--k);padding:.7em 1.2em;font-size:1.2em;border-top:4px solid var(--c);animation:fi .8s}#cm small{display:block;color:var(--c);font-weight:700}
-#pz{display:none;position:absolute;z-index:8;width:min(46%,30em);padding:1.3em 1.6em;background:var(--i);color:var(--k);border:1px solid var(--w);box-shadow:0 10px 40px #000a;animation:fi .5s}
-#pz.on{display:block}#pz p{font-size:1.3em;line-height:1.9}#pz h3{margin:.6em 0 .4em;color:var(--c);font-size:1.5em}
-#pz div{display:flex;gap:.5em}#pz input{flex:1;padding:.5em;font:inherit;font-size:1.2em;background:#fff8;border:1px solid var(--c);color:var(--k)}
-#pz button{background:var(--o);color:var(--i);border:0;padding:.5em 1.2em;font:inherit;cursor:pointer}
-#pz em{display:block;min-height:1.6em;margin-top:.6em;color:var(--o)}#pz a{font-size:.9em;color:var(--c);cursor:pointer;text-decoration:underline}
+#pz{display:none;position:absolute;z-index:100000;width:min(46%,30em);padding:1.3em 1.6em;background:var(--i);color:var(--k);border:1px solid var(--w);box-shadow:0 10px 40px #000a;animation:fi .5s;pointer-events:auto!important}
+#pz.on{display:block;pointer-events:auto!important}
+#pz,#pz *{pointer-events:auto!important}
+#pz p{font-size:1.3em;line-height:1.9}#pz h3{margin:.6em 0 .4em;color:var(--c);font-size:1.5em}
+#pz div{display:flex;gap:.5em}#pz input{flex:1;padding:.5em;font:inherit;font-size:1.2em;background:#fff8;border:1px solid var(--c);color:var(--k);pointer-events:auto!important;user-select:text!important;-webkit-user-select:text!important;cursor:text!important;touch-action:auto!important;position:relative;z-index:100001}
+#pz button{background:var(--o);color:var(--i);border:0;padding:.5em 1.2em;font:inherit;cursor:pointer;pointer-events:auto!important}
+#pz em{display:block;min-height:1.6em;margin-top:.6em;color:var(--o)}#pz a{font-size:.9em;color:var(--c);cursor:pointer;text-decoration:underline;pointer-events:auto!important}
 #pz.no{animation:shk .4s}
 @keyframes shk{25%{translate:-8px}75%{translate:8px}}
 .p0{left:3%;bottom:5%}.p1{right:3%;top:9%;background:#2F2E2Bf2!important;color:var(--i)!important;border-color:var(--c)!important}.p1 h3,.p5 h3{color:var(--w)!important}
@@ -82,14 +84,3 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
 .hn{opacity:0}.d .hn{opacity:1;animation:cp .22s infinite alternate}@keyframes cp{to{transform:translateY(-14px)}}
 .rp{fill:none;stroke:#D8C3A5;opacity:0}.d .rp{animation:rn 2.4s infinite}@keyframes rn{0%{opacity:.7;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
 .rp{transform-box:fill-box;transform-origin:center}
-#pz{
-  pointer-events:all !important;
-  z-index:20 !important;
-}
-
-#pz input{
-  pointer-events:all !important;
-  user-select:text !important;
-  -webkit-user-select:text !important;
-  cursor:text !important;
-}
