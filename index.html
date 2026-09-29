@@ -13,7 +13,7 @@
   <script type="module" src="./main.js"></script>
 
   <script>
-    /* إصلاح إجابة لغز الخوف بدون تغيير بقية اللعبة */
+    /* إصلاح إدخال الإجابات وإعادة التركيز على خانة الإجابة بعد الخطأ */
     document.addEventListener('click', function (event) {
       const button = event.target.closest('#ok');
       const input = document.querySelector('#in');
@@ -23,11 +23,23 @@
       const text = puzzle.textContent || '';
       const answer = (input.value || '').trim();
 
-      /* إذا كان اللغز الحالي هو لغز الخوف، فـ "الخوف" إجابة صحيحة */
+      /* في لغز الخوف: "الخوف" إجابة صحيحة */
       if (text.includes('كل متحدث عظيم قابلني') && /^(ال)?خوف$/.test(answer)) {
         input.value = 'الخوف من التحدث أمام الجمهور';
       }
-    }, true);
+
+      /* بعد الضغط على تحقق، لو كانت الإجابة خاطئة نعيد المؤشر للخانة
+         حتى تستطيع حذف الإجابة وتعديلها مباشرة دون الضغط مرة أخرى. */
+      setTimeout(() => {
+        const currentInput = document.querySelector('#in');
+        const currentPuzzle = document.querySelector('#pz');
+        if (currentInput && currentPuzzle && currentPuzzle.classList.contains('on')) {
+          currentInput.focus();
+          const n = currentInput.value.length;
+          try { currentInput.setSelectionRange(n, n); } catch (e) {}
+        }
+      }, 20);
+    });
   </script>
 </body>
 </html>
