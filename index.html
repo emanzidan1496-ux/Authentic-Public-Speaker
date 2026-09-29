@@ -6,40 +6,39 @@
   <title>قضية المتحدث الحقيقي</title>
   <link rel="stylesheet" href="./style.css">
 </head>
-
 <body>
   <div id="app"></div>
+
+  <script>
+    /* عند عمل Refresh تبدأ اللعبة من السؤال الأول بدل استكمال آخر سؤال. */
+    try { localStorage.removeItem('asc-001'); } catch (e) {}
+  </script>
 
   <script type="module" src="./main.js"></script>
 
   <script>
-    /* إصلاح خانة الإجابة: قبول "الخوف" قبل فحص main.js،
-       وإعادة المؤشر للخانة بعد الضغط على تحقق حتى يمكن تعديل الإجابة فورًا. */
-    document.addEventListener('click', function (event) {
-      const button = event.target.closest('#ok');
+    /* حماية خانة الإجابة من أحداث المشهد والسماح بالكتابة والحذف بشكل طبيعي. */
+    const answerWatcher = new MutationObserver(() => {
       const input = document.querySelector('#in');
-      const puzzle = document.querySelector('#pz');
-      if (!button || !input || !puzzle) return;
+      if (!input || input.dataset.ready === '1') return;
 
-      const text = puzzle.textContent || '';
-      const answer = (input.value || '').trim();
+      input.dataset.ready = '1';
+      input.disabled = false;
+      input.readOnly = false;
+      input.tabIndex = 0;
 
-      /* هذا المستمع يعمل في مرحلة الالتقاط، لذلك تصل الإجابة المصححة إلى main.js قبل فحصها. */
-      if (text.includes('كل متحدث عظيم قابلني') && /^(ال)?خوف$/.test(answer)) {
-        input.value = 'الخوف من التحدث أمام الجمهور';
-      }
+      ['pointerdown','mousedown','click','touchstart'].forEach(type => {
+        input.addEventListener(type, e => e.stopPropagation());
+      });
 
-      /* بعد التحقق، أبقِ خانة الإجابة قابلة للكتابة والتعديل مباشرة. */
-      setTimeout(function () {
-        const currentInput = document.querySelector('#in');
-        const currentPuzzle = document.querySelector('#pz');
-        if (currentInput && currentPuzzle && currentPuzzle.classList.contains('on')) {
-          currentInput.focus();
-          const n = currentInput.value.length;
-          try { currentInput.setSelectionRange(n, n); } catch (e) {}
-        }
-      }, 30);
-    }, true);
+      ['keydown','keyup','keypress','input','beforeinput'].forEach(type => {
+        input.addEventListener(type, e => e.stopPropagation());
+      });
+
+      requestAnimationFrame(() => input.focus());
+    });
+
+    answerWatcher.observe(document.body, { childList: true, subtree: true });
   </script>
 </body>
 </html>
