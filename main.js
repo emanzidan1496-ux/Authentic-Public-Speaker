@@ -81,8 +81,43 @@ const t=x=>{const e=$('#t1');e.style.animation='none';e.offsetWidth;e.style.anim
 const cap=t=>{const e=$('#cap');e.textContent=t;e.classList.add('on');later(()=>e.classList.remove('on'),5500)};
 const hud=()=>{$('#fb').textContent=`FILES ${files.length}/7`;$('#dr').innerHTML=files.length?files.map(i=>`<div>0${i+1} — ${P[i].name}</div>`).join(''):'<div>—</div>'};
 const show=(k,first)=>{gen++;sd={};$('#pz').className='';$('#cm').innerHTML='';const s=$('#sc'),put=()=>{s.innerHTML=S[k]();s.style.opacity=1;I[k]&&I[k]()};first?put():(s.style.opacity=0,setTimeout(put,800))};
-const pz=i=>{const p=P[i],e=$('#pz');e.className='on p'+i;e.innerHTML=`<p>${p.r}</p><h3>${p.q}</h3><div style="pointer-events:auto;position:relative;z-index:1000"><input id="in" type="text" placeholder="اكتب إجابتك" autocomplete="off" spellcheck="false" style="pointer-events:auto;user-select:text;-webkit-user-select:text;position:relative;z-index:1001"><button id="ok" type="button" style="pointer-events:auto;position:relative;z-index:1001">تحقّق</button></div><em id="ht"></em><a id="hb">تلميح</a>`;
-const inp=$('#in');
+const pz=i=>{
+  const p=P[i],e=$('#pz');
+
+  e.className='on p'+i;
+
+  e.innerHTML=`
+    <p>${p.r}</p>
+    <h3>${p.q}</h3>
+    <div>
+      <input
+        id="in"
+        type="text"
+        placeholder="اكتب إجابتك"
+        autocomplete="off"
+        autocorrect="off"
+        autocapitalize="off"
+        spellcheck="false"
+        onkeydown="event.stopPropagation()"
+        onkeyup="event.stopPropagation()"
+        onkeypress="event.stopPropagation()"
+        onclick="event.stopPropagation()"
+        oninput="event.stopPropagation()"
+      >
+      <button id="ok" type="button">تحقّق</button>
+    </div>
+    <em id="ht"></em>
+    <a id="hb">تلميح</a>
+  `;
+
+  setTimeout(()=>{
+    const input=$('#in');
+    if(input){
+      input.focus();
+      input.value='';
+    }
+  },50);
+};const inp=$('#in');
 $('#hb').onclick=()=>$('#ht').textContent=p.h;
 inp.onpointerdown=e=>e.stopPropagation();
 inp.onclick=e=>{e.stopPropagation();inp.focus()};
