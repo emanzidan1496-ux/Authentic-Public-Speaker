@@ -1,49 +1,8 @@
-// تحسين الانتقال بين الألغاز
-(() => {
-  const hideClue = () => {
-    const cm = document.querySelector('#cm');
-    if (cm) {
-      cm.style.visibility = 'hidden';
-      cm.style.pointerEvents = 'none';
-    }
-  };
-
-  const restoreClue = () => {
-    const cm = document.querySelector('#cm');
-    if (cm) {
-      cm.style.visibility = '';
-      cm.style.pointerEvents = '';
-    }
-  };
-
-  const openBodyLanguageRiddle = () => {
-    const sc = document.querySelector('#sc');
-    if (!sc) return;
-    const scene = sc.querySelector('#cur');
-    const sentence = sc.querySelector('[data-a="sent"]');
-    const body = sc.querySelector('[data-a="body"]');
-    if (!scene || !sentence || !body || scene.dataset.bodyPuzzleOpened === '1') return;
-
-    scene.dataset.bodyPuzzleOpened = '1';
-    hideClue();
-    sentence.click();
-    body.click();
-
-    const wait = setInterval(() => {
-      const pz = document.querySelector('#pz');
-      if (pz && pz.classList.contains('on')) {
-        clearInterval(wait);
-        restoreClue();
-      }
-    }, 30);
-
-    setTimeout(() => {
-      clearInterval(wait);
-      restoreClue();
-    }, 3500);
-  };
-
-  const observer = new MutationObserver(openBodyLanguageRiddle);
-  observer.observe(document.body, { childList: true, subtree: true });
-  setTimeout(openBodyLanguageRiddle, 50);
+(()=>{
+const sc=()=>document.querySelector('#sc'),scene=()=>document.querySelector('#sc #cur'),hide=()=>{if(sc())sc().style.opacity='0'},show=()=>{if(sc())sc().style.opacity='1'},hidecm=()=>{const e=document.querySelector('#cm');if(e)e.style.visibility='hidden'},showcm=()=>{const e=document.querySelector('#cm');if(e)e.style.visibility=''};
+function body(){const s=scene(),a=s?.querySelector('[data-a="sent"]'),b=s?.querySelector('[data-a="body"]');if(!s||!a||!b||s.dataset.bodyFix)return;s.dataset.bodyFix=1;hide();hidecm();a.click();b.click();let n=0,t=setInterval(()=>{const p=document.querySelector('#pz.on');if(p){clearInterval(t);show();showcm()}if(++n>120){clearInterval(t);show();showcm()}},30)}
+function map(){const s=scene(),pp=s?[...s.querySelectorAll('.pp')]:[];if(!s||pp.length!==5||s.dataset.mapFix)return;s.dataset.mapFix=1;hide();const r=s.getBoundingClientRect(),pt=(x,y)=>({x:r.left+x*r.width/1000,y:r.top+y*r.height/600});pp.slice(0,3).forEach((g,i)=>{const p=pt(+g.dataset.x,+g.dataset.y);g.dispatchEvent(new PointerEvent('pointerdown',{bubbles:true,clientX:p.x,clientY:p.y,pointerId:i+1,pointerType:'mouse'}));s.dispatchEvent(new PointerEvent('pointerup',{bubbles:true,clientX:p.x,clientY:p.y,pointerId:i+1,pointerType:'mouse'}))});let n=0,t=setInterval(()=>{if(document.querySelector('#pz.on')){clearInterval(t);show()}if(++n>90){clearInterval(t);show()}},30)}
+function final(){const s=scene();if(!s||s.dataset.finalFix||!document.querySelector('#fin'))return;s.dataset.finalFix=1;s.innerHTML=`<defs><linearGradient id="ff" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#A66F4E"/><stop offset="1" stop-color="#4a3222"/></linearGradient><linearGradient id="fc" x1="0" x2="1"><stop stop-color="#151412"/><stop offset=".5" stop-color="#3F4A36"/><stop offset="1" stop-color="#151412"/></linearGradient></defs><rect width="1000" height="600" fill="#171613"/><rect width="145" height="475" fill="url(#fc)"/><rect x="855" width="145" height="475" fill="url(#fc)"/><rect x="145" width="710" height="475" fill="#2F2E2B"/><g class="beam" opacity="0"><path d="M360 0h90L590 475H270Z" fill="#F6EFE4" opacity=".18"/><path d="M640 0h90L730 475H410Z" fill="#F6EFE4" opacity=".18"/></g><rect y="475" width="1000" height="125" fill="url(#ff)"/>${[0,1,2,3,4,5,6].map(i=>`<path d="M0 ${492+i*16}H1000" stroke="#241912" stroke-opacity=".55"/>`).join('')}<g class="spark" opacity="0">${[[180,110],[250,180],[330,95],[670,100],[750,175],[820,110],[500,70]].map(([x,y])=>`<path d="M${x} ${y-18}V${y+18}M${x-18} ${y}H${x+18}" stroke="#D8C3A5" stroke-width="4"/>`).join('')}</g><g class="words" opacity="0" text-anchor="middle" direction="rtl"><g class="word"><text x="245" y="250" fill="#F6EFE4" font-size="26">صوتي</text></g><g class="word"><text x="720" y="205" fill="#D8C3A5" font-size="26">رسالتي</text></g><g class="word"><text x="390" y="160" fill="#A66F4E" font-size="26">حضوري</text></g><g class="word"><text x="600" y="110" fill="#F6EFE4" font-size="26">تأثيري</text></g></g><ellipse cx="500" cy="492" rx="105" ry="20" fill="#0008"/><g class="fs" opacity="0"><ellipse cy="6" cx="500" rx="68" ry="13" fill="#0008"/><path d="M455 475L445 343Q500 317 555 343L545 475Z" fill="#151412" stroke="#D8C3A5" stroke-opacity=".7" stroke-width="3"/><path d="M462 360Q395 370 350 420Q335 435 322 450" fill="none" stroke="#151412" stroke-width="18" stroke-linecap="round"/><path d="M538 360Q605 370 650 420Q665 435 678 450" fill="none" stroke="#151412" stroke-width="18" stroke-linecap="round"/><circle cx="322" cy="450" r="10" fill="#C9A889"/><circle cx="678" cy="450" r="10" fill="#C9A889"/><circle cx="500" cy="302" r="38" fill="#C9A889" stroke="#D8C3A5" stroke-width="3"/><path d="M485 290q7-7 14 0M501 290q7-7 14 0M485 320q15 13 30 0" fill="none" stroke="#2F2E2B" stroke-width="4" stroke-linecap="round"/><path d="M472 270q28-20 56 0" fill="none" stroke="#151412" stroke-width="13" stroke-linecap="round"/><path d="M482 475v55M518 475v55M472 530h20M508 530h20" stroke="#151412" stroke-width="14" stroke-linecap="round"/>${Array.from({length:18},(_,i)=>{let x=35+i*55,y=550+(i%2)*12;return `<circle cx="${x}" cy="${y}" r="16" fill="#11100F"/><path d="M${x-25} 600Q${x-22} ${y+22} ${x} ${y+20}Q${x+22} ${y+22} ${x+25} 600Z" fill="#11100F"/>`}).join('')}</g>`;
+const st=document.createElement('style');st.textContent='#cur .fs{transition:opacity 2s,transform 2s;transform-origin:500px 475px}#cur.a .fs{opacity:1;transform:scale(1.02)}#cur.b .beam{opacity:1;transition:opacity 2s}#cur.c .words{opacity:1}#cur .word{animation:rise 4s ease-out infinite}#cur .word:nth-child(2){animation-delay:.7s}#cur .word:nth-child(3){animation-delay:1.4s}#cur .word:nth-child(4){animation-delay:2.1s}@keyframes rise{0%{transform:translateY(70px);opacity:0}20%{opacity:1}100%{transform:translateY(-60px);opacity:0}}#cur.d .spark{opacity:1;transition:opacity 1s}#cur.d .fs{animation:wave 1.2s ease-in-out 2}@keyframes wave{50%{transform:scale(1.05)}}';document.head.appendChild(st)}
+const o=new MutationObserver(()=>{body();map();final()});o.observe(document.body,{childList:true,subtree:true});setTimeout(()=>{body();map();final()},80);
 })();
