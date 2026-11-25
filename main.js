@@ -198,7 +198,7 @@ $('#app').innerHTML=`<svg width="0" height="0" style="position:absolute"><defs>
 <filter id="gl" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="5" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
 <filter id="nz"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="2"/><feColorMatrix values="0 0 0 0 .2 0 0 0 0 .2 0 0 0 0 .2 0 0 0 .1 0"/></filter></defs></svg>
 <div id="st"><div id="sc"></div><div id="hud" class="h"><b>CASE 001</b><button id="fb"></button></div><div id="dr"></div><div id="cap"></div><div id="cm"></div><div id="pz"></div><div id="stp"></div>
-<div id="ov"><div id="cv"><small>CASE 001</small><h1>قضية المتحدث الحقيقي</h1><h2>Ahmed Salim</h2><div class="team-credits"><span>Eman zidan</span><span>Hady Abo Elez</span></div><i>سري</i><button id="begin">ابدأ التحقيق</button></div></div></div>`;
+<div id="ov"><div id="cv"><small>CASE 001</small><h1>قضية المتحدث الحقيقي</h1><div class="ahmed-name">Ahmed Salim</div><div class="team-credits"><span>Eman zidan</span><span>Hady Abo Elez</span></div><i>سري</i><button id="begin">ابدأ التحقيق</button></div></div></div>`;
 $('#st').addEventListener('click',e=>{const a=e.target.closest('[data-a]');a&&act[a.dataset.a]&&act[a.dataset.a]()});
 $('#fb').onclick=()=>$('#dr').classList.toggle('on');
 hud();show('C',1);
