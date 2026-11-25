@@ -170,3 +170,29 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
  #cv .team-credits{gap:14px}
  #cv .team-credits span{font-size:1em}
 }
+
+
+/* Microphone centered between collaborator names; Eman stays on the right */
+#cv .team-credits{
+  direction:rtl;
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(16px,3vw,34px);
+}
+#cv .team-credits .credit-eman{order:1}
+#cv .team-credits .credit-mic{
+  order:2;
+  display:block;
+  width:34px;
+  height:52px;
+  flex:0 0 auto;
+  color:#D8C3A5;
+  filter:drop-shadow(0 0 7px rgba(166,111,78,.65));
+}
+#cv .team-credits .credit-hady{order:3}
+@media(max-width:600px){
+  #cv .team-credits{gap:12px}
+  #cv .team-credits .credit-mic{width:26px;height:42px}
+}
