@@ -242,3 +242,19 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
 #cv .team-credits .credit-hady{order:1}
 #cv .team-credits .credit-mic{order:2}
 #cv .team-credits .credit-eman{order:3}
+
+
+/* Correct final order and equal visual weight for both collaborator names */
+#cv .team-credits .credit-eman{order:1 !important}
+#cv .team-credits .credit-mic{order:2 !important}
+#cv .team-credits .credit-hady{order:3 !important}
+#cv .team-credits .credit-eman,
+#cv .team-credits .credit-hady{
+  display:inline-block;
+  flex:0 0 auto;
+  font-size:clamp(1.25em,2vw,1.55em) !important;
+  line-height:1.25;
+  font-weight:700;
+  color:#D8C3A5;
+  white-space:nowrap;
+}
