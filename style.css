@@ -84,3 +84,40 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
 .hn{opacity:0}.d .hn{opacity:1;animation:cp .22s infinite alternate}@keyframes cp{to{transform:translateY(-14px)}}
 .rp{fill:none;stroke:#D8C3A5;opacity:0}.d .rp{animation:rn 2.4s infinite}@keyframes rn{0%{opacity:.7;transform:scale(.2)}100%{opacity:0;transform:scale(1.6)}}
 .rp{transform-box:fill-box;transform-origin:center}
+
+
+/* Opening screen team credits */
+#cv .team-credits{
+  display:flex;
+  flex-direction:row;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(14px,3vw,42px);
+  width:min(720px,88%);
+  margin-top:.75em;
+  position:relative;
+  z-index:8;
+}
+#cv .team-credits span{
+  flex:1 1 0;
+  max-width:290px;
+  padding:.42em .65em;
+  border:2px solid #D8C3A5;
+  border-radius:9px;
+  background:rgba(47,46,43,.94);
+  color:#F6EFE4;
+  font-size:clamp(1em,1.7vw,1.45em);
+  line-height:1.25;
+  font-weight:700;
+  white-space:nowrap;
+  text-shadow:0 2px 9px #000;
+  box-shadow:0 0 15px rgba(216,195,165,.22);
+}
+#cv .team-credits span+span{
+  color:#D8C3A5;
+  border-color:#A66F4E;
+}
+@media(max-width:600px){
+  #cv .team-credits{gap:8px;width:92%}
+  #cv .team-credits span{font-size:clamp(.85em,3.2vw,1.05em);padding:.38em .25em}
+}
