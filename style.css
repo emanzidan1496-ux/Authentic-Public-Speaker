@@ -258,3 +258,20 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
   color:#D8C3A5;
   white-space:nowrap;
 }
+
+
+/* Locked left-to-right positions: Eman | microphone | Hady */
+#cv .team-credits{
+  display:grid !important;
+  grid-template-columns:max-content 46px max-content !important;
+  direction:ltr !important;
+  justify-content:center !important;
+  align-items:center !important;
+  column-gap:clamp(16px,3vw,34px) !important;
+}
+#cv .team-credits .credit-eman{grid-column:1 !important;order:0 !important}
+#cv .team-credits .credit-mic{grid-column:2 !important;order:0 !important}
+#cv .team-credits .credit-hady{grid-column:3 !important;order:0 !important}
+@media(max-width:600px){
+  #cv .team-credits{grid-template-columns:max-content 34px max-content !important;column-gap:10px !important}
+}
