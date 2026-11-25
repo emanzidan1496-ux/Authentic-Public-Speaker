@@ -223,3 +223,22 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
  #cv .ahmed-name{font-size:2em}
  #cv .team-credits .credit-mic{width:38px;height:52px}
 }
+
+
+/* Final opening credit layout: compact Ahmed nameplate; Eman takes Hady's former position */
+#cv .ahmed-name{
+  min-width:0;
+  width:max-content;
+  max-width:70%;
+  padding:.18em .65em;
+  margin-top:.35em;
+  font-size:clamp(1.65em,2.8vw,2.25em);
+  line-height:1.15;
+}
+#cv .team-credits{
+  direction:ltr;
+  flex-direction:row;
+}
+#cv .team-credits .credit-hady{order:1}
+#cv .team-credits .credit-mic{order:2}
+#cv .team-credits .credit-eman{order:3}
