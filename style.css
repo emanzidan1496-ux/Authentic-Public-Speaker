@@ -196,3 +196,30 @@ svg.scene{position:absolute;inset:0;width:100%;height:100%;animation:zin 2.6s ea
   #cv .team-credits{gap:12px}
   #cv .team-credits .credit-mic{width:26px;height:42px}
 }
+
+
+/* Correct presenter credit order: Eman left, microphone center, Hady right */
+#cv .team-credits{
+  direction:ltr;
+  flex-direction:row;
+}
+#cv .team-credits .credit-eman{order:1}
+#cv .team-credits .credit-mic{
+  order:2;
+  width:46px;
+  height:62px;
+  color:#D8C3A5;
+  filter:drop-shadow(0 0 8px rgba(216,195,165,.65));
+}
+#cv .team-credits .credit-hady{order:3}
+#cv .ahmed-name{
+  color:#FFFFFF;
+  font-size:clamp(2.2em,4vw,3.1em);
+  font-weight:800;
+  letter-spacing:.02em;
+  text-shadow:0 2px 12px rgba(0,0,0,.85);
+}
+@media(max-width:600px){
+ #cv .ahmed-name{font-size:2em}
+ #cv .team-credits .credit-mic{width:38px;height:52px}
+}
